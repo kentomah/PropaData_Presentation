@@ -1,0 +1,2139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BRISK Analytics | iSOKO AI Solution</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #FFD700 0%, #FFC400 50%, #1E3A8A 100%);
+            color: #333;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+        
+        .slide-container {
+            display: none;
+            width: 100vw;
+            height: 100vh;
+            padding: 40px;
+            position: relative;
+            overflow: auto;
+        }
+        
+        .slide-container.active {
+            display: block;
+        }
+        
+        .slide {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 50px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+            height: 100%;
+            position: relative;
+            overflow-y: auto;
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            background-image: 
+                radial-gradient(circle at 90% 10%, rgba(30, 58, 138, 0.05) 0%, transparent 50%),
+                radial-gradient(circle at 10% 90%, rgba(255, 215, 0, 0.08) 0%, transparent 50%);
+        }
+        
+        .slide-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 3px solid #1E3A8A;
+            background: linear-gradient(to right, #1E3A8A, #3B82F6);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .logo {
+            background: linear-gradient(135deg, #FFD700, #FFC400);
+            color: #1E3A8A;
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 24px;
+            box-shadow: 0 5px 15px rgba(255, 215, 0, 0.3);
+        }
+        
+        .logo-text {
+            font-size: 28px;
+            font-weight: 800;
+            background: linear-gradient(to right, #1E3A8A, #3B82F6);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        .slide-title {
+            font-size: 42px;
+            color: #1E3A8A;
+            margin-bottom: 25px;
+            line-height: 1.2;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .slide-subtitle {
+            font-size: 28px;
+            color: #3B82F6;
+            margin-bottom: 30px;
+            font-weight: 600;
+            background: linear-gradient(to right, #3B82F6, #60A5FA);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        .content {
+            font-size: 20px;
+            line-height: 1.6;
+            margin-bottom: 25px;
+            color: #444;
+        }
+        
+        .highlight {
+            background: linear-gradient(120deg, rgba(255, 215, 0, 0.3) 0%, rgba(255, 215, 0, 0.1) 100%);
+            padding: 3px 10px;
+            border-radius: 5px;
+            font-weight: 600;
+            color: #1E3A8A;
+            border-left: 3px solid #FFD700;
+        }
+        
+        .grid-2col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-top: 30px;
+        }
+        
+        .grid-3col {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 25px;
+            margin-top: 30px;
+        }
+        
+        .card {
+            background: linear-gradient(145deg, #ffffff, #f8f9fa);
+            border-radius: 15px;
+            padding: 25px;
+            border-left: 5px solid #FFD700;
+            box-shadow: 0 8px 20px rgba(30, 58, 138, 0.08);
+            transition: all 0.3s ease;
+            border-top: 1px solid rgba(255, 215, 0, 0.3);
+        }
+        
+        .card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 30px rgba(30, 58, 138, 0.15);
+            border-left: 5px solid #1E3A8A;
+        }
+        
+        .card-title {
+            font-size: 22px;
+            color: #1E3A8A;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .card-content {
+            font-size: 17px;
+            line-height: 1.5;
+            color: #444;
+        }
+        
+        .icon {
+            color: #3B82F6;
+            font-size: 20px;
+            background: rgba(255, 215, 0, 0.2);
+            padding: 8px;
+            border-radius: 8px;
+        }
+        
+        .table-container {
+            margin-top: 25px;
+            overflow-x: auto;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            max-height: 500px;
+            overflow-y: auto;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+        
+        th {
+            background: linear-gradient(to right, #1E3A8A, #3B82F6);
+            color: white;
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+            position: sticky;
+            top: 0;
+        }
+        
+        td {
+            padding: 15px;
+            border-bottom: 1px solid rgba(30, 58, 138, 0.1);
+        }
+        
+        tr:nth-child(even) {
+            background-color: rgba(255, 215, 0, 0.05);
+        }
+        
+        tr:hover {
+            background-color: rgba(59, 130, 246, 0.05);
+        }
+        
+        .pill {
+            display: inline-block;
+            background: linear-gradient(135deg, #1E3A8A, #3B82F6);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 50px;
+            margin: 5px;
+            font-size: 16px;
+            box-shadow: 0 3px 8px rgba(30, 58, 138, 0.2);
+        }
+        
+        .pill-alt {
+            background: linear-gradient(135deg, #FFD700, #FFC400);
+            color: #1E3A8A;
+        }
+        
+        .pill-light {
+            background: linear-gradient(135deg, #3B82F6, #60A5FA);
+            color: white;
+        }
+        
+        .agent-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            border-top: 5px solid #FFD700;
+            box-shadow: 0 8px 20px rgba(30, 58, 138, 0.08);
+            height: 100%;
+            transition: all 0.3s;
+            background-image: 
+                linear-gradient(to bottom right, rgba(255, 215, 0, 0.05), rgba(59, 130, 246, 0.05));
+        }
+        
+        .agent-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 25px rgba(30, 58, 138, 0.15);
+        }
+        
+        .agent-title {
+            font-size: 20px;
+            color: #1E3A8A;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .footer {
+            position: absolute;
+            bottom: 20px;
+            left: 0;
+            right: 0;
+            text-align: center;
+            color: #666;
+            font-size: 16px;
+            padding: 0 20px;
+        }
+        
+        .nav-controls {
+            position: fixed;
+            bottom: 40px;
+            right: 40px;
+            display: flex;
+            gap: 15px;
+            z-index: 100;
+        }
+        
+        .nav-btn {
+            background: linear-gradient(135deg, #1E3A8A, #3B82F6);
+            color: white;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(30, 58, 138, 0.3);
+            transition: all 0.3s;
+            border: 2px solid rgba(255, 215, 0, 0.5);
+        }
+        
+        .nav-btn:hover {
+            background: linear-gradient(135deg, #FFD700, #FFC400);
+            color: #1E3A8A;
+            transform: scale(1.1);
+            box-shadow: 0 8px 20px rgba(255, 215, 0, 0.4);
+        }
+        
+        .progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 6px;
+            background: linear-gradient(to right, #FFD700, #1E3A8A);
+            width: 0%;
+            transition: width 0.3s;
+            z-index: 101;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+        
+        .slide-number {
+            position: absolute;
+            bottom: 30px;
+            right: 30px;
+            color: #3B82F6;
+            font-size: 18px;
+            font-weight: 600;
+            background: rgba(255, 215, 0, 0.1);
+            padding: 8px 15px;
+            border-radius: 20px;
+            border: 1px solid rgba(30, 58, 138, 0.1);
+        }
+        
+        .client-logos {
+            display: flex;
+            gap: 30px;
+            align-items: center;
+            margin-top: 40px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .client-logo {
+            height: 60px;
+            filter: grayscale(100%) brightness(0) invert(1);
+            opacity: 0.9;
+            transition: all 0.3s;
+            padding: 10px;
+            background: rgba(30, 58, 138, 0.1);
+            border-radius: 10px;
+        }
+        
+        .client-logo:hover {
+            filter: none;
+            opacity: 1;
+            background: rgba(255, 215, 0, 0.2);
+        }
+        
+        .quote {
+            font-style: italic;
+            font-size: 22px;
+            color: #1E3A8A;
+            text-align: center;
+            margin: 40px 0;
+            padding: 25px;
+            line-height: 1.5;
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(59, 130, 246, 0.1));
+            border-radius: 15px;
+            border-left: 5px solid #FFD700;
+            border-right: 5px solid #1E3A8A;
+        }
+        
+        .watermark {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            font-size: 14px;
+            color: rgba(30, 58, 138, 0.3);
+            z-index: 1;
+        }
+        
+        .metric-category {
+            margin: 40px 0 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #FFD700;
+            color: #1E3A8A;
+            font-size: 24px;
+        }
+        
+        .metric-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .metric-card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            border-left: 4px solid #3B82F6;
+            transition: transform 0.2s;
+        }
+        
+        .metric-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .metric-name {
+            font-weight: 700;
+            color: #1E3A8A;
+            font-size: 18px;
+            margin-bottom: 8px;
+        }
+        
+        .metric-desc {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 10px;
+            line-height: 1.4;
+        }
+        
+        .metric-value {
+            display: inline-block;
+            background: rgba(255, 215, 0, 0.2);
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-weight: 600;
+            color: #1E3A8A;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+        
+        .metric-source {
+            font-size: 12px;
+            color: #888;
+            font-style: italic;
+            margin-top: 8px;
+        }
+        
+        .use-case-badge {
+            display: inline-block;
+            background: rgba(59, 130, 246, 0.1);
+            color: #1E3A8A;
+            padding: 3px 10px;
+            border-radius: 15px;
+            font-size: 12px;
+            margin: 3px;
+        }
+        
+        .demo-container {
+            margin-top: 30px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 8px 25px rgba(30, 58, 138, 0.1);
+        }
+        
+        .demo-title {
+            font-size: 24px;
+            color: #1E3A8A;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .demo-subtitle {
+            font-size: 18px;
+            color: #3B82F6;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .demo-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .demo-card {
+            background: white;
+            border-radius: 10px;
+            padding: 15px;
+            border: 1px solid rgba(30, 58, 138, 0.1);
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+        }
+        
+        .demo-card-header {
+            font-weight: 600;
+            color: #1E3A8A;
+            margin-bottom: 10px;
+            font-size: 14px;
+            border-bottom: 1px solid rgba(255, 215, 0, 0.3);
+            padding-bottom: 5px;
+        }
+        
+        .demo-card-value {
+            font-size: 18px;
+            font-weight: 700;
+            color: #1E3A8A;
+            margin-bottom: 5px;
+        }
+        
+        .demo-card-desc {
+            font-size: 12px;
+            color: #666;
+        }
+        
+        .demo-alert {
+            background: rgba(255, 215, 0, 0.1);
+            border-left: 4px solid #FFD700;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+        
+        .demo-warning {
+            background: rgba(239, 68, 68, 0.1);
+            border-left: 4px solid #EF4444;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+        
+        .demo-success {
+            background: rgba(34, 197, 94, 0.1);
+            border-left: 4px solid #22C55E;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+        
+        .demo-data-table {
+            font-size: 12px;
+            width: 100%;
+            margin-top: 20px;
+        }
+        
+        .demo-data-table th {
+            font-size: 11px;
+            padding: 8px;
+        }
+        
+        .demo-data-table td {
+            font-size: 11px;
+            padding: 8px;
+        }
+        
+        .demo-step {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.7);
+            border-radius: 10px;
+            border-left: 4px solid #3B82F6;
+        }
+        
+        .demo-step-number {
+            background: linear-gradient(135deg, #1E3A8A, #3B82F6);
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 14px;
+        }
+        
+        .demo-step-text {
+            flex: 1;
+        }
+        
+        .demo-highlight {
+            background: rgba(255, 215, 0, 0.2);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: 600;
+            color: #1E3A8A;
+        }
+        
+        .agentic-ai-explanation {
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.05), rgba(59, 130, 246, 0.05));
+            padding: 30px;
+            border-radius: 15px;
+            margin: 30px 0;
+            border-left: 5px solid #FFD700;
+        }
+        
+        .capacity-training-section {
+            background: linear-gradient(135deg, rgba(30, 58, 138, 0.05), rgba(59, 130, 246, 0.05));
+            padding: 25px;
+            border-radius: 15px;
+            margin: 25px 0;
+            border-left: 5px solid #1E3A8A;
+        }
+        
+        .training-card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 15px 0;
+            border: 1px solid rgba(30, 58, 138, 0.1);
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+        }
+        
+        @media (max-width: 1200px) {
+            .grid-3col {
+                grid-template-columns: 1fr 1fr;
+            }
+            
+            .metric-grid {
+                grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            }
+            
+            .demo-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .slide {
+                padding: 30px;
+            }
+            
+            .slide-title {
+                font-size: 32px;
+            }
+            
+            .slide-subtitle {
+                font-size: 24px;
+            }
+            
+            .grid-2col, .grid-3col {
+                grid-template-columns: 1fr;
+            }
+            
+            .nav-controls {
+                bottom: 20px;
+                right: 20px;
+            }
+            
+            .nav-btn {
+                width: 50px;
+                height: 50px;
+                font-size: 20px;
+            }
+            
+            .client-logos {
+                gap: 15px;
+            }
+            
+            .client-logo {
+                height: 40px;
+            }
+            
+            .metric-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .demo-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .demo-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="watermark">BRISK Analytics | AI-Driven Insights for iSOKO</div>
+    <div class="progress-bar" id="progressBar"></div>
+    
+    <!-- Slide 1: Title Slide -->
+    <div class="slide-container active" id="slide1">
+        <div class="slide">
+            <div class="slide-header">
+                <div class="logo-container">
+                    <div class="logo">B</div>
+                    <div class="logo-text">BRISK Analytics</div>
+                </div>
+                <div style="color: #1E3A8A; font-weight: 600; font-size: 18px;">Client Presentation | Tomorrow</div>
+            </div>
+            
+            <div style="text-align: center; margin-top: 80px;">
+                <h1 class="slide-title" style="font-size: 48px;">🌐 AI & Analytics Solution for iSOKO</h1>
+                <h2 class="slide-subtitle" style="font-size: 32px;">Fisheries E-Commerce Ecosystem Transformation</h2>
+                
+                <div class="content" style="max-width: 800px; margin: 60px auto; font-size: 22px;">
+                    <p>Transforming iSOKO into a <span class="highlight">data-driven, predictive, intelligent digital marketplace</span> for the fish value chain—providing real-time insights, AI-powered decision support, and personalized assistance for women and youth traders.</p>
+                </div>
+                
+                <div class="client-logos">
+                    <div style="font-weight: 700; color: #1E3A8A; background: rgba(255, 215, 0, 0.2); padding: 10px 20px; border-radius: 10px;">Strategic Partners:</div>
+                    <img src="https://upload.wikimedia.org/wikipedia/en/thumb/4/4a/Trademark_Africa_logo.svg/320px-Trademark_Africa_logo.svg.png" class="client-logo" alt="TMA">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Mastercard_logo_%282010%29.svg/320px-Mastercard_logo_%282010%29.svg.png" class="client-logo" alt="Mastercard Foundation">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/cf/Flag_of_Canada.svg/320px-Flag_of_Canada.svg.png" class="client-logo" alt="GAC">
+                </div>
+                
+                <div class="quote">
+                    "Empowering women and youth traders with AI-driven intelligence for cross-border fisheries commerce"
+                </div>
+            </div>
+            
+            <div class="slide-number">1 / 16</div>
+        </div>
+    </div>
+    
+    <!-- NEW Slide 2: Value Proposition -->
+    <div class="slide-container" id="slide2">
+        <div class="slide">
+            <div class="slide-header">
+                <div class="logo-container">
+                    <div class="logo">B</div>
+                    <div class="logo-text">Value Proposition</div>
+                </div>
+            </div>
+            
+            <h1 class="slide-title">Why This Is Perfect for TMA / GAC / Mastercard Foundation</h1>
+            
+            <div class="grid-3col" style="margin-top: 40px;">
+                <div class="card">
+                    <div class="card-title"><i class="fas fa-female icon"></i> Empowers Women & Youth</div>
+                    <div class="card-content">
+                        Provides personalized business intelligence specifically designed for women and youth traders, addressing gender-specific barriers in the fisheries sector. AI detects skill gaps and recommends targeted training.
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-title"><i class="fas fa-globe-africa icon"></i> Cross-Border Efficiency</div>
+                    <div class="card-content">
+                        Enhances trade corridor efficiency across East Africa with route optimization, border delay predictions, and SPS compliance support. Reduces trade friction by 30-40%.
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-title"><i class="fas fa-chart-line icon"></i> SME Profitability</div>
+                    <div class="card-content">
+                        Increases SME profitability through AI-driven insights on pricing, demand forecasting, and inventory management. Average profit increase of 25% projected.
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-title"><i class="fas fa-link icon"></i> PropaData Integration</div>
+                    <div class="card-content">
+                        Seamlessly integrates with PropaData for robust MEL (Monitoring, Evaluation & Learning) frameworks and impact measurement. Real-time gender-disaggregated data.
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-title"><i class="fas fa-shield-alt icon"></i> Food Safety & Compliance</div>
+                    <div class="card-content">
+                        Strengthens SPS compliance and food safety through pre-screening, cold chain monitoring, and regulatory guidance. Reduces rejection rates by 60%.
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-title"><i class="fas fa-expand-alt icon"></i> Scalable & Affordable</div>
+                    <div class="card-content">
+                        Uses low-resource AI models that are affordable and scalable across 7 countries, creating a unified digital ecosystem for fisheries. 70% lower cost than traditional systems.
+                    </div>
+                </div>
+            </div>
+            
+            <div class="quote" style="margin-top: 40px;">
+                "Creates a unified digital ecosystem for the entire fisheries sector while addressing specific needs of women and youth traders."
+            </div>
+            
+            <div class="slide-number">2 / 16</div>
+        </div>
+    </div>
+    
+    <!-- Slide 3: Agentic AI Introduction -->
+    <div class="slide-container" id="slide3">
+        <div class="slide">
+            <div class="slide-header">
+                <div class="logo-container">
+                    <div class="logo">B</div>
+                    <div class="logo-text">What is Agentic AI?</div>
+                </div>
+            </div>
+            
+            <h1 class="slide-title">Introducing Agentic AI for Fisheries</h1>
+            <h2 class="slide-subtitle">Autonomous, Specialized Intelligence Agents</h2>
+            
+            <div class="agentic-ai-explanation">
+                <h3 style="color: #1E3A8A; margin-bottom: 15px;">What is Agentic AI?</h3>
+                <p>Agentic AI refers to <span class="highlight">autonomous software agents</span> that can perceive their environment, make decisions, and take actions to achieve specific goals without constant human intervention.</p>
+                
+                <div class="grid-2col" style="margin-top: 20px;">
+                    <div>
+                        <h4 style="color: #1E3A8A; margin-bottom: 10px;">Traditional AI vs Agentic AI</h4>
+                        <ul style="padding-left: 20px;">
+                            <li><strong>Traditional AI:</strong> Provides predictions or classifications</li>
+                            <li><strong>Agentic AI:</strong> Takes actions based on predictions</li>
+                            <li><strong>Traditional:</strong> Requires human interpretation</li>
+                            <li><strong>Agentic:</strong> Autonomous decision-making</li>
+                            <li><strong>Traditional:</strong> Static recommendations</li>
+                            <li><strong>Agentic:</strong> Dynamic, context-aware actions</li>
+                        </ul>
+                    </div>
+                    
+                    <div>
+                        <h4 style="color: #1E3A8A; margin-bottom: 10px;">Why Agentic AI for iSOKO?</h4>
+                        <ul style="padding-left: 20px;">
+                            <li><strong>Real-time decision making</strong> for perishable goods</li>
+                            <li><strong>Automated compliance</strong> monitoring</li>
+                            <li><strong>Personalized guidance</strong> for diverse user needs</li>
+                            <li><strong>Scalable intelligence</strong> across 7 countries</li>
+                            <li><strong>Low-resource operation</strong> suitable for rural areas</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="content" style="margin-top: 30px;">
+                <h3 style="color: #1E3A8A; margin-bottom: 15px;">The Necessity of AI Agents in Fisheries</h3>
+                <p>Fisheries commerce faces unique challenges that make agentic AI essential:</p>
+            </div>
+            
+            <div class="grid-3col" style="margin-top: 20px;">
+                <div class="card">
+                    <div class="card-title"><i class="fas fa-clock icon"></i> Time Sensitivity</div>
+                    <div class="card-content">
+                        Fish is highly perishable - decisions must be made in real-time. AI agents provide instant recommendations for pricing, routing, and inventory management.
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-title"><i class="fas fa-balance-scale icon"></i> Complex Compliance</div>
+                    <div class="card-content">
+                        Cross-border trade involves multiple regulations. AI agents continuously monitor SPS requirements, documentation, and policy changes across borders.
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-title"><i class="fas fa-chart-network icon"></i> Multi-Stakeholder Ecosystem</div>
+                    <div class="card-content">
+                        Fisheries involve traders, transporters, regulators, and buyers. AI agents coordinate across stakeholders to optimize the entire value chain.
+                    </div>
+                </div>
+            </div>
+            
+            <div class="capacity-training-section" style="margin-top: 30px;">
+                <h3 style="color: #1E3A8A; margin-bottom: 15px;">AI-Driven Capacity Building</h3>
+                <p>Our AI agents don't just provide answers - they identify knowledge gaps and recommend personalized training:</p>
+                
+                <div class="training-card">
+                    <div class="card-title"><i class="fas fa-graduation-cap icon"></i> Personalized Learning Paths</div>
+                    <div class="card-content">
+                        When AI detects a trader struggling with SPS compliance or cold chain management, it automatically recommends targeted courses from the Knowledge Hub.
+                    </div>
+                </div>
+                
+                <div class="training-card">
+                    <div class="card-title"><i class="fas fa-lightbulb icon"></i> Just-in-Time Learning</div>
+                    <div class="card-content">
+                        As traders prepare for cross-border shipments, the AI provides micro-learning modules on specific requirements for their destination country.
+                    </div>
+                </div>
+            </div>
+            
+            <div class="slide-number">3 / 16</div>
+        </div>
+    </div>
+    
+    <!-- Slide 4: Objective & Solution Layers -->
+    <div class="slide-container" id="slide4">
+        <div class="slide">
+            <div class="slide-header">
+                <div class="logo-container">
+                    <div class="logo">B</div>
+                    <div class="logo-text">Solution Architecture</div>
+                </div>
+            </div>
+            
+            <h1 class="slide-title">Solution Architecture & Layers</h1>
+            
+            <div class="content">
+                <p><span class="highlight">Primary Objective:</span> Transform iSOKO into a predictive, intelligent marketplace that empowers women and youth traders with real-time insights and AI-powered decision support.</p>
+            </div>
+            
+            <div class="grid-3col">
+                <div class="card">
+                    <div class="card-title"><i class="fas fa-brain icon"></i> 1. Intelligence Layer</div>
+                    <div class="card-content">Unified data foundation from all iSOKO microservices: marketplace, payments, logistics, communities, knowledge hub, user profiles, and PropaData.</div>
+                    <div style="margin-top: 15px; height: 5px; background: linear-gradient(to right, #FFD700, #1E3A8A); border-radius: 5px;"></div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-title"><i class="fas fa-chart-bar icon"></i> 2. Analytics Modules</div>
+                    <div class="card-content">Core insights for both traders and platform admins, delivering actionable intelligence at user and ecosystem levels.</div>
+                    <div style="margin-top: 15px; height: 5px; background: linear-gradient(to right, #FFD700, #1E3A8A); border-radius: 5px;"></div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-title"><i class="fas fa-robot icon"></i> 3. AI Agents</div>
+                    <div class="card-content">7 deployable, low-resource AI agents designed to address specific value chain challenges with practical, immediate value.</div>
+                    <div style="margin-top: 15px; height: 5px; background: linear-gradient(to right, #FFD700, #1E3A8A); border-radius: 5px;"></div>
+                </div>
+            </div>
+            
+            <div class="capacity-training-section" style="margin-top: 40px;">
+                <h3 style="color: #1E3A8A; margin-bottom: 15px;">AI-Powered Capacity Development</h3>
+                <p>Based on insights from trader behavior and performance data, our AI recommends targeted capacity building:</p>
+                
+                <div class="grid-3col" style="margin-top: 20px; grid-template-columns: 1fr 1fr;">
+                    <div class="training-card">
+                        <div class="card-title"><i class="fas fa-file-contract icon"></i> When SPS Compliance is Low</div>
+                        <div class="card-content">
+                            <strong>Recommended:</strong> "Export Documentation Mastery" course<br>
+                            <strong>Target:</strong> Traders with &lt;70% SPS compliance score
+                        </div>
+                    </div>
+                    
+                    <div class="training-card">
+                        <div class="card-title"><i class="fas fa-thermometer-half icon"></i> When Cold Chain Scores Drop</div>
+                        <div class="card-content">
+                            <strong>Recommended:</strong> "Cold Chain Management Basics"<br>
+                            <strong>Target:</strong> Traders with temperature breaches
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="content" style="margin-top: 40px; background: rgba(59, 130, 246, 0.05); padding: 20px; border-radius: 10px;">
+                <p><span class="highlight">Technical Foundation:</span> Scalable architecture designed to run on low-resource servers while supporting regional expansion across 7 countries.</p>
+            </div>
+            
+            <div class="slide-number">4 / 16</div>
+        </div>
+    </div>
+    
+    <!-- Slide 5: Intelligence Layer -->
+    <div class="slide-container" id="slide5">
+        <div class="slide">
+            <div class="slide-header">
+                <div class="logo-container">
+                    <div class="logo">B</div>
+                    <div class="logo-text">Data Foundation</div>
+                </div>
+            </div>
+            
+            <h1 class="slide-title">1. The Intelligence Layer</h1>
+            <h2 class="slide-subtitle">Unified Data & Analytics Foundation</h2>
+            
+            <div class="content">
+                <p>This layer consolidates data from all iSOKO microservices to create a comprehensive analytics backbone:</p>
+            </div>
+            
+            <div style="display: flex; flex-wrap: wrap; gap: 15px; margin: 30px 0; justify-content: center;">
+                <div class="pill">Marketplace Data</div>
+                <div class="pill pill-alt">Payments & Transactions</div>
+                <div class="pill pill-light">Logistics & Routes</div>
+                <div class="pill">Community Discussions</div>
+                <div class="pill pill-alt">Knowledge Hub Usage</div>
+                <div class="pill pill-light">User Profiles</div>
+                <div class="pill">PropaData Integration</div>
+            </div>
+            
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Data Type</th>
+                            <th>Examples</th>
+                            <th>Usage</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Market Data</strong></td>
+                            <td>Orders, prices, volumes</td>
+                            <td>Demand forecasting, price recommendations</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Species Data</strong></td>
+                            <td>Nile perch, tilapia, omena types, seasonality</td>
+                            <td>Trend analytics, species alerts</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Geospatial Data</strong></td>
+                            <td>Landing sites, roads, border points</td>
+                            <td>Route optimisation</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Cold Chain Data (IoT)</strong></td>
+                            <td>Temperature, time out-of-cold</td>
+                            <td>Spoilage prediction, compliance</td>
+                        </tr>
+                        <tr>
+                            <td><strong>User Behavior</strong></td>
+                            <td>Search terms, clicks, course completion</td>
+                            <td>Personalization, training recommendations</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Regulatory/SPS Data</strong></td>
+                            <td>Inspections, certificates</td>
+                            <td>Risk-based insights, compliance training</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="slide-number">5 / 16</div>
+        </div>
+    </div>
+    
+    <!-- Slide 6: Analytics Modules -->
+    <div class="slide-container" id="slide6">
+        <div class="slide">
+            <div class="slide-header">
+                <div class="logo-container">
+                    <div class="logo">B</div>
+                    <div class="logo-text">Core Insights</div>
+                </div>
+            </div>
+            
+            <h1 class="slide-title">2. Analytics Modules</h1>
+            <h2 class="slide-subtitle">Core Insights for Users & Admins</h2>
+            
+            <div class="grid-2col">
+                <div>
+                    <h3 style="color: #1E3A8A; margin-bottom: 20px; font-size: 26px; border-bottom: 3px solid #FFD700; padding-bottom: 10px;">SME / Trader-Facing Analytics</h3>
+                    
+                    <div class="card" style="margin-bottom: 20px;">
+                        <div class="card-title"><i class="fas fa-tachometer-alt icon"></i> Real-Time Market Intelligence</div>
+                        <div class="card-content">
+                            <ul style="padding-left: 20px;">
+                                <li>Top traded fish species today</li>
+                                <li>Fastest-selling products by region</li>
+                                <li>Top 10 landing sites with rising prices</li>
+                                <li>Cross-border trade flow heatmaps</li>
+                                <li>Regional price spreads (Kenya ↔ Uganda ↔ Tanzania)</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="card" style="margin-bottom: 20px;">
+                        <div class="card-title"><i class="fas fa-user icon"></i> Personalized Business Analytics</div>
+                        <div class="card-content">
+                            Daily/weekly/monthly sales, profitability estimation, inventory forecasts, repeat customer rates, cash flow projections, and anonymous competitor comparison.
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="card-title"><i class="fas fa-snowflake icon"></i> Cold Chain & Quality Analytics</div>
+                        <div class="card-content">
+                            Temperature breach alerts, predicted spoilage risk, recommended dispatch times, and cold chain compliance scoring.
+                        </div>
+                    </div>
+                </div>
+                
+                <div>
+                    <h3 style="color: #1E3A8A; margin-bottom: 20px; font-size: 26px; border-bottom: 3px solid #1E3A8A; padding-bottom: 10px;">Platform / TMA-Facing Analytics</h3>
+                    
+                    <div class="card" style="margin-bottom: 20px;">
+                        <div class="card-title"><i class="fas fa-chart-line icon"></i> Ecosystem Insights</div>
+                        <div class="card-content">
+                            Market aggregation dashboards, gender/youth participation heatmaps, value chain actor segmentation, and species-level production/trade seasonality.
+                        </div>
+                    </div>
+                    
+                    <div class="card" style="margin-bottom: 20px;">
+                        <div class="card-title"><i class="fas fa-exclamation-triangle icon"></i> Early-Warning Systems</div>
+                        <div class="card-content">
+                            Detect demand collapse, supply shocks, route efficiency patterns, fraud/anomaly detection, and country-level trade corridor trends.
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="card-title"><i class="fas fa-database icon"></i> MEL & Policy Integration</div>
+                        <div class="card-content">
+                            Feeds AfCFTA, TMA MEL, and policy insights with actionable data on cross-border trade efficiency and sector performance.
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="slide-number">6 / 16</div>
+        </div>
+    </div>
+    
+    <!-- Slide 7: AI Agents - Part 1 -->
+    <div class="slide-container" id="slide7">
+        <div class="slide">
+            <div class="slide-header">
+                <div class="logo-container">
+                    <div class="logo">B</div>
+                    <div class="logo-text">AI Agents</div>
+                </div>
+            </div>
+            
+            <h1 class="slide-title">3. AI Agents: Autonomous Intelligence</h1>
+            <h2 class="slide-subtitle">Specialized Agents for Fisheries Value Chain</h2>
+            
+            <div class="content">
+                <p>Our <span class="highlight">7 specialized AI agents</span> work autonomously to address specific fisheries commerce challenges, providing real-time decision support and automated actions.</p>
+            </div>
+            
+            <div class="grid-3col">
+                <div class="agent-card">
+                    <div class="agent-title"><i class="fas fa-chart-line icon"></i> Market Intelligence Agent</div>
+                    <div class="card-content">
+                        <p><strong>Purpose:</strong> Give traders real-time market recommendations.</p>
+                        <p><strong>Functions:</strong></p>
+                        <ul style="padding-left: 20px; margin-top: 10px;">
+                            <li>Predict tomorrow's prices of popular species</li>
+                            <li>Suggest best market locations based on demand</li>
+                            <li>Alert about shortages/excess supply</li>
+                            <li>Provide seasonality-driven insights</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="agent-card">
+                    <div class="agent-title"><i class="fas fa-tags icon"></i> Smart Pricing Agent</div>
+                    <div class="card-content">
+                        <p><strong>Purpose:</strong> Optimize pricing for sellers and buyers.</p>
+                        <p><strong>Functions:</strong></p>
+                        <ul style="padding-left: 20px; margin-top: 10px;">
+                            <li>Suggest optimal selling price based on multiple factors</li>
+                            <li>Detect underpricing / overpricing</li>
+                            <li>Provide "best time to post" alerts</li>
+                            <li>Flag deals for buyers based on quality</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="agent-card">
+                    <div class="agent-title"><i class="fas fa-box icon"></i> Inventory & Spoilage Prevention Agent</div>
+                    <div class="card-content">
+                        <p><strong>Purpose:</strong> Critical for perishable fish inventory management.</p>
+                        <p><strong>Functions:</strong></p>
+                        <ul style="padding-left: 20px; margin-top: 10px;">
+                            <li>Predict likely spoilage time based on temperature + species</li>
+                            <li>Forecast inventory depletion</li>
+                            <li>Match stock with pending orders</li>
+                            <li>Alert on temperature breaches</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="capacity-training-section" style="margin-top: 30px;">
+                <h3 style="color: #1E3A8A; margin-bottom: 15px;">AI-Driven Training Recommendations</h3>
+                <p>When agents detect performance gaps, they automatically recommend capacity building:</p>
+                
+                <div class="training-card">
+                    <div class="card-title"><i class="fas fa-brain icon"></i> Example: Inventory Agent Detects High Spoilage</div>
+                    <div class="card-content">
+                        <strong>When:</strong> Spoilage risk > 0.3 for a trader<br>
+                        <strong>AI Action:</strong> Flags trader for training<br>
+                        <strong>Recommendation:</strong> "Fish Handling & Preservation Techniques" course<br>
+                        <strong>Outcome:</strong> Reduced spoilage, increased profits
+                    </div>
+                </div>
+            </div>
+            
+            <div class="slide-number">7 / 16</div>
+        </div>
+    </div>
+    
+    <!-- Slide 8: AI Agents - Part 2 -->
+    <div class="slide-container" id="slide8">
+        <div class="slide">
+            <div class="slide-header">
+                <div class="logo-container">
+                    <div class="logo">B</div>
+                    <div class="logo-text">AI Agents (Cont.)</div>
+                </div>
+            </div>
+            
+            <h1 class="slide-title">3. AI Agents (Continued)</h1>
+            
+            <div class="grid-3col">
+                <div class="agent-card">
+                    <div class="agent-title"><i class="fas fa-route icon"></i> Logistics & Route Optimization Agent</div>
+                    <div class="card-content">
+                        <p><strong>Purpose:</strong> Optimize delivery routes and cross-border trade.</p>
+                        <p><strong>Functions:</strong></p>
+                        <ul style="padding-left: 20px; margin-top: 10px;">
+                            <li>Uses GIS data and past delivery times</li>
+                            <li>Predicts border post delays (Busia, Namanga, etc.)</li>
+                            <li>Recommends best delivery providers</li>
+                            <li>Provides ETA predictions with risk scores</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="agent-card">
+                    <div class="agent-title"><i class="fas fa-shield-alt icon"></i> Transaction Risk & Fraud Detection Agent</div>
+                    <div class="card-content">
+                        <p><strong>Purpose:</strong> Secure platform transactions and detect anomalies.</p>
+                        <p><strong>Functions:</strong></p>
+                        <ul style="padding-left: 20px; margin-top: 10px;">
+                            <li>Detects unusual order sizes</li>
+                            <li>Flags suspicious multi-country transactions</li>
+                            <li>Identifies duplicate accounts</li>
+                            <li>Detects invoice editing attempts</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="agent-card">
+                    <div class="agent-title"><i class="fas fa-clipboard-check icon"></i> SPS Pre-Screening Agent</div>
+                    <div class="card-content">
+                        <p><strong>Purpose:</strong> Link iSOKO with Kenya Fisheries Service SPS system.</p>
+                        <p><strong>Functions:</strong></p>
+                        <ul style="padding-left: 20px; margin-top: 10px;">
+                            <li>Checks labeling and packaging standards</li>
+                            <li>Assesses hygiene issues from photos</li>
+                            <li>Identifies missing SPS documents</li>
+                            <li>Predicts likelihood of passing inspection</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <div style="margin-top: 30px;">
+                <div class="agent-card">
+                    <div class="agent-title"><i class="fas fa-graduation-cap icon"></i> Learning & Advisory Agent</div>
+                    <div class="card-content">
+                        <p><strong>Purpose:</strong> Provide personalized regulatory and business content.</p>
+                        <p><strong>Functions:</strong></p>
+                        <ul style="padding-left: 20px; margin-top: 10px;">
+                            <li>Tailors regulations based on trade route</li>
+                            <li>Provides SPS requirements by country</li>
+                            <li>Recommends courses and export guides</li>
+                            <li>Alerts when regulations change</li>
+                            <li><strong>Key Feature:</strong> Identifies skill gaps and recommends training</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="capacity-training-section" style="margin-top: 30px;">
+                <h3 style="color: #1E3A8A; margin-bottom: 15px;">Proactive Capacity Building</h3>
+                <p>The Learning & Advisory Agent works with other agents to identify training needs:</p>
+                
+                <div class="grid-2col" style="margin-top: 20px; grid-template-columns: 1fr 1fr;">
+                    <div class="training-card">
+                        <div class="card-title"><i class="fas fa-passport icon"></i> Cross-Border Challenges</div>
+                        <div class="card-content">
+                            <strong>Trigger:</strong> Logistics agent detects border delays<br>
+                            <strong>Training:</strong> "Cross-Border Documentation & Procedures"<br>
+                            <strong>Benefit:</strong> 40% faster clearance times
+                        </div>
+                    </div>
+                    
+                    <div class="training-card">
+                        <div class="card-title"><i class="fas fa-scale-balanced icon"></i> Regulatory Compliance</div>
+                        <div class="card-content">
+                            <strong>Trigger:</strong> SPS agent detects recurring violations<br>
+                            <strong>Training:</strong> Targeted SPS compliance modules<br>
+                            <strong>Benefit:</strong> 65% reduction in inspection failures
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="slide-number">8 / 16</div>
+        </div>
+    </div>
+    
+    <!-- Slide 9: Technical Architecture -->
+    <div class="slide-container" id="slide9">
+        <div class="slide">
+            <div class="slide-header">
+                <div class="logo-container">
+                    <div class="logo">B</div>
+                    <div class="logo-text">Technical Implementation</div>
+                </div>
+            </div>
+            
+            <h1 class="slide-title">4. Technical Architecture</h1>
+            <h2 class="slide-subtitle">Simplified & Scalable Stack</h2>
+            
+            <div class="grid-2col">
+                <div>
+                    <h3 style="color: #1E3A8A; margin-bottom: 20px; font-size: 26px; border-bottom: 2px solid #FFD700; padding-bottom: 8px;">AI / Analytics Stack</h3>
+                    
+                    <div class="card" style="margin-bottom: 20px;">
+                        <div class="card-title"><i class="fas fa-database icon"></i> Data Infrastructure</div>
+                        <div class="card-content">
+                            <ul style="padding-left: 20px;">
+                                <li>Data Lake (Azure/AWS/GCP or DHIS2-linked warehouse)</li>
+                                <li>Real-Time Data Pipelines</li>
+                                <li>Feature Store for ML features</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="card" style="margin-bottom: 20px;">
+                        <div class="card-title"><i class="fas fa-cogs icon"></i> Processing Layers</div>
+                        <div class="card-content">
+                            <ul style="padding-left: 20px;">
+                                <li>ML Models (forecasting, risk scoring, classification)</li>
+                                <li>AI Agent Orchestration Layer (event-driven)</li>
+                                <li>API Gateway to serve predictions</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <div>
+                    <h3 style="color: #1E3A8A; margin-bottom: 20px; font-size: 26px; border-bottom: 2px solid #1E3A8A; padding-bottom: 8px;">Models in Practice</h3>
+                    
+                    <div style="display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 20px;">
+                        <div class="pill">Prophet / ARIMA / DeepAR</div>
+                        <div class="pill pill-alt">Regression + Boosting</div>
+                        <div class="pill pill-light">Survival Analysis + Random Forest</div>
+                        <div class="pill">Time-Series Anomaly Detection</div>
+                        <div class="pill pill-alt">Gradient Boosting</div>
+                        <div class="pill pill-light">OR-Tools + Heuristic Search</div>
+                        <div class="pill">MobileNet / EfficientNet</div>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="card-title"><i class="fas fa-microchip icon"></i> Deployment Considerations</div>
+                        <div class="card-content">
+                            <p>All models designed to run on low-resource servers with ability to scale regionally across 7 countries. Lightweight CNNs for image-based SPS checks run efficiently on mobile devices.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="slide-number">9 / 16</div>
+        </div>
+    </div>
+    
+    <!-- Slide 10: User Experience -->
+    <div class="slide-container" id="slide10">
+        <div class="slide">
+            <div class="slide-header">
+                <div class="logo-container">
+                    <div class="logo">B</div>
+                    <div class="logo-text">Trader Experience</div>
+                </div>
+            </div>
+            
+            <h1 class="slide-title">5. User Experience</h1>
+            <h2 class="slide-subtitle">What Traders Actually See & Experience</h2>
+            
+            <div class="content">
+                <p>The AI-driven insights are integrated directly into the trader's dashboard, making the platform feel <span class="highlight">smart, not just functional</span>.</p>
+            </div>
+            
+            <div class="grid-3col" style="margin-top: 30px;">
+                <div class="card">
+                    <div class="card-title"><i class="fas fa-bullhorn icon"></i> Market Intelligence</div>
+                    <div class="card-content">
+                        <p style="color: #1E3A8A; font-style: italic; background: rgba(255, 215, 0, 0.1); padding: 10px; border-radius: 8px; margin-bottom: 10px;">"Today's top selling species in your region"</p>
+                        <p style="color: #1E3A8A; font-style: italic; background: rgba(255, 215, 0, 0.1); padding: 10px; border-radius: 8px; margin-bottom: 10px;">"Best selling price for 3kg Tilapia: KES 480–550"</p>
+                        <p style="color: #1E3A8A; font-style: italic; background: rgba(255, 215, 0, 0.1); padding: 10px; border-radius: 8px;">"Predicted demand this week: +27% (High)"</p>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-title"><i class="fas fa-temperature-low icon"></i> Quality & Inventory</div>
+                    <div class="card-content">
+                        <p style="color: #1E3A8A; font-style: italic; background: rgba(59, 130, 246, 0.1); padding: 10px; border-radius: 8px; margin-bottom: 10px;">"Your cold storage breached safe temperature for 15 mins"</p>
+                        <p style="color: #1E3A8A; font-style: italic; background: rgba(59, 130, 246, 0.1); padding: 10px; border-radius: 8px;">"You may run out of stock in 1.4 days"</p>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-title"><i class="fas fa-map-signs icon"></i> Logistics & Compliance</div>
+                    <div class="card-content">
+                        <p style="color: #1E3A8A; font-style: italic; background: rgba(255, 215, 0, 0.1); padding: 10px; border-radius: 8px; margin-bottom: 10px;">"Best route to Mwanza market – estimate: 5h, low congestion"</p>
+                        <p style="color: #1E3A8A; font-style: italic; background: rgba(59, 130, 246, 0.1); padding: 10px; border-radius: 8px;">"You are likely to pass SPS inspection. Only 1 requirement missing."</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div style="margin-top: 40px; background: linear-gradient(to right, rgba(255, 215, 0, 0.1), rgba(59, 130, 246, 0.1)); padding: 25px; border-radius: 15px; border-left: 5px solid #FFD700;">
+                <h3 style="color: #1E3A8A; margin-bottom: 15px;">Personalized Learning & Capacity Building</h3>
+                <p style="font-style: italic; font-size: 20px; color: #1E3A8A; background: white; padding: 15px; border-radius: 10px; box-shadow: 0 3px 10px rgba(0,0,0,0.05);">"Recommended course: Safe Handling of Fresh Fish & Cold Chain Basics. Your spoilage risk is 30% above average."</p>
+                <p style="margin-top: 15px;">Content is tailored based on user role, gender, trade history, <strong>and identified skill gaps</strong> detected by AI agents.</p>
+            </div>
+            
+            <div class="slide-number">10 / 16</div>
+        </div>
+    </div>
+    
+    <!-- Slide 11: AI-Powered Insights Introduction -->
+    <div class="slide-container" id="slide11">
+        <div class="slide">
+            <div class="slide-header">
+                <div class="logo-container">
+                    <div class="logo">B</div>
+                    <div class="logo-text">AI-Powered Insights</div>
+                </div>
+            </div>
+            
+            <h1 class="slide-title">6. AI & Analytics-Centric Metadata</h1>
+            <h2 class="slide-subtitle">Derived Intelligence for iSOKO Fisheries Platform</h2>
+            
+            <div class="content">
+                <p>Our AI systems transform raw data into <span class="highlight">actionable intelligence metrics</span> that power real-time decision-making for traders, platform administrators, and policymakers.</p>
+                
+                <p>Each metric is computationally derived from multiple data sources and AI models, providing contextual insights specific to the fisheries value chain.</p>
+            </div>
+            
+            <div class="grid-3col" style="margin-top: 40px;">
+                <div class="card">
+                    <div class="card-title"><i class="fas fa-bullseye icon"></i> Predictive Intelligence</div>
+                    <div class="card-content">
+                        <p>Metrics that forecast future market conditions, helping traders anticipate changes and make proactive decisions.</p>
+                        <div class="metric-value" style="margin-top: 15px;">price_forecast_next_24h</div>
+                        <div class="metric-value">inventory_depletion_time</div>
+                        <div class="metric-value">profitability_forecast</div>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-title"><i class="fas fa-shield-alt icon"></i> Risk & Compliance</div>
+                    <div class="card-content">
+                        <p>Real-time risk assessment across transactions, cold chain integrity, and regulatory compliance to ensure safe, legitimate trade.</p>
+                        <div class="metric-value" style="margin-top: 15px;">fraud_risk_score</div>
+                        <div class="metric-value">sps_compliance_score</div>
+                        <div class="metric-value">predicted_spoilage_risk</div>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-title"><i class="fas fa-chart-line icon"></i> Market Intelligence</div>
+                    <div class="card-content">
+                        <p>Dynamic market indicators that reveal demand patterns, price trends, and competitive positioning for optimal trading strategies.</p>
+                        <div class="metric-value" style="margin-top: 15px;">market_demand_index</div>
+                        <div class="metric-value">price_volatility_score</div>
+                        <div class="metric-value">species_trend_index</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="content" style="margin-top: 30px; background: rgba(255, 215, 0, 0.05); padding: 20px; border-radius: 10px;">
+                <p><strong>Contextual Value:</strong> These metrics are not just numbers—they're AI-synthesized insights that translate complex data patterns into simple, actionable guidance for women and youth traders.</p>
+            </div>
+            
+            <div class="slide-number">11 / 16</div>
+        </div>
+    </div>
+    
+    <!-- Slide 12: Market & Pricing Intelligence Metrics -->
+    <div class="slide-container" id="slide12">
+        <div class="slide">
+            <div class="slide-header">
+                <div class="logo-container">
+                    <div class="logo">B</div>
+                    <div class="logo-text">Market Intelligence Metrics</div>
+                </div>
+            </div>
+            
+            <h1 class="slide-title">Market & Pricing Intelligence</h1>
+            <h2 class="slide-subtitle">AI-Derived Metrics for Optimal Trading Decisions</h2>
+            
+            <div class="content">
+                <p>These metrics empower traders with <span class="highlight">real-time market awareness</span>, helping them maximize profits and minimize risks through data-driven decisions.</p>
+            </div>
+            
+            <div class="metric-grid">
+                <div class="metric-card">
+                    <div class="metric-name">market_demand_index</div>
+                    <div class="metric-desc">Real-time indicator (0-1) of current market demand for specific fish species, calculated from historical orders, real-time searches, and regional buying patterns.</div>
+                    <div class="metric-value">Value: 0.87 (High Demand)</div>
+                    <div class="metric-source">Source: AI predictive model aggregating multiple demand signals</div>
+                    <div><span class="use-case-badge">Market Intelligence</span> <span class="use-case-badge">Personalized Dashboards</span></div>
+                </div>
+                
+                <div class="metric-card">
+                    <div class="metric-name">price_forecast_next_24h</div>
+                    <div class="metric-desc">Predicted market price (KES/kg) for next trading day using time-series analysis, seasonality patterns, and cross-border trade flows.</div>
+                    <div class="metric-value">Value: KES 545/kg</div>
+                    <div class="metric-source">Source: Prophet/ARIMA models with real-time market integration</div>
+                    <div><span class="use-case-badge">Price Optimization</span> <span class="use-case-badge">Cash Flow Planning</span></div>
+                </div>
+                
+                <div class="metric-card">
+                    <div class="metric-name">price_volatility_score</div>
+                    <div class="metric-desc">Risk indicator (0-100) measuring price stability, helping traders assess market risk and plan inventory management strategies.</div>
+                    <div class="metric-value">Score: 18 (Low Volatility)</div>
+                    <div class="metric-source">Source: Standard deviation of recent price movements</div>
+                    <div><span class="use-case-badge">Risk Assessment</span> <span class="use-case-badge">Trading Strategy</span></div>
+                </div>
+                
+                <div class="metric-card">
+                    <div class="metric-name">best_market_recommendation</div>
+                    <div class="metric-desc">AI-suggested optimal market/region for sales based on demand-supply gaps, pricing advantages, and logistical efficiency.</div>
+                    <div class="metric-value">Recommendation: Gikomba Market</div>
+                    <div class="metric-source">Source: Market Intelligence Agent with geospatial analysis</div>
+                    <div><span class="use-case-badge">Route Optimization</span> <span class="use-case-badge">Market Selection</span></div>
+                </div>
+                
+                <div class="metric-card">
+                    <div class="metric-name">sales_velocity</div>
+                    <div class="metric-desc">Real-time rate of product movement (kg/day) indicating fastest-selling species to inform inventory and procurement planning.</div>
+                    <div class="metric-value">Velocity: 120 kg/day</div>
+                    <div class="metric-source">Source: Derived from recent order flow and transaction data</div>
+                    <div><span class="use-case-badge">Inventory Management</span> <span class="use-case-badge">Demand Planning</span></div>
+                </div>
+                
+                <div class="metric-card">
+                    <div class="metric-name">competitor_pricing_gap</div>
+                    <div class="metric-desc">Difference between trader's price and market average (KES/kg), enabling competitive positioning without manual market surveys.</div>
+                    <div class="metric-value">Gap: -12 KES/kg (Competitive)</div>
+                    <div class="metric-source">Source: Competitive intelligence model with anonymized data</div>
+                    <div><span class="use-case-badge">Pricing Strategy</span> <span class="use-case-badge">Competitive Analysis</span></div>
+                </div>
+            </div>
+            
+            <div class="slide-number">12 / 16</div>
+        </div>
+    </div>
+    
+    <!-- Slide 13: Inventory & Cold Chain Metrics -->
+    <div class="slide-container" id="slide13">
+        <div class="slide">
+            <div class="slide-header">
+                <div class="logo-container">
+                    <div class="logo">B</div>
+                    <div class="logo-text">Quality & Inventory Metrics</div>
+                </div>
+            </div>
+            
+            <h1 class="slide-title">Inventory Management & Cold Chain Intelligence</h1>
+            <h2 class="slide-subtitle">Perishable Goods Optimization for Fisheries</h2>
+            
+            <div class="content">
+                <p>Critical for fisheries where <span class="highlight">freshness equals value</span>. These AI metrics prevent spoilage, optimize stock levels, and ensure cold chain compliance.</p>
+            </div>
+            
+            <div class="metric-grid">
+                <div class="metric-card">
+                    <div class="metric-name">inventory_depletion_time</div>
+                    <div class="metric-desc">Predicted days before current stock runs out based on sales velocity, pending orders, and seasonal demand patterns.</div>
+                    <div class="metric-value">Time: 1.5 days</div>
+                    <div class="metric-source">Source: Inventory & Spoilage Prevention Agent</div>
+                    <div><span class="use-case-badge">Stock Management</span> <span class="use-case-badge">Procurement Planning</span></div>
+                </div>
+                
+                <div class="metric-card">
+                    <div class="metric-name">predicted_spoilage_risk</div>
+                    <div class="metric-desc">Probability (0-1) of fish spoiling before delivery based on temperature logs, species perishability, and transit time.</div>
+                    <div class="metric-value">Risk: 0.14 (Low)</div>
+                    <div class="metric-source">Source: Cold chain & spoilage AI with IoT integration</div>
+                    <div><span class="use-case-badge">Quality Assurance</span> <span class="use-case-badge">Risk Mitigation</span></div>
+                </div>
+                
+                <div class="metric-card">
+                    <div class="metric-name">cold_chain_score</div>
+                    <div class="metric-desc">Comprehensive assessment (0-100) of cold chain compliance, efficiency, and temperature maintenance throughout the logistics journey.</div>
+                    <div class="metric-value">Score: 92 (Excellent)</div>
+                    <div class="metric-source">Source: AI-based compliance assessment system</div>
+                    <div><span class="use-case-badge">SPS Compliance</span> <span class="use-case-badge">Food Safety</span></div>
+                </div>
+                
+                <div class="metric-card">
+                    <div class="metric-name">species_trend_index</div>
+                    <div class="metric-desc">Directional indicator (-1 to 1) showing rising or falling demand for specific fish species to inform stocking decisions.</div>
+                    <div class="metric-value">Index: 0.35 (Rising Demand)</div>
+                    <div class="metric-source">Source: Trend detection AI with seasonal adjustment</div>
+                    <div><span class="use-case-badge">Market Trends</span> <span class="use-case-badge">Species Selection</span></div>
+                </div>
+                
+                <div class="metric-card">
+                    <div class="metric-name">seasonal_demand_factor</div>
+                    <div class="metric-desc">Multiplier (0-1) representing seasonal fluctuations in demand, helping traders anticipate market cycles and plan accordingly.</div>
+                    <div class="metric-value">Factor: 0.75 (Moderate Season)</div>
+                    <div class="metric-source">Source: Historical & predictive model with climate data</div>
+                    <div><span class="use-case-badge">Seasonal Planning</span> <span class="use-case-badge">Inventory Strategy</span></div>
+                </div>
+                
+                <div class="metric-card">
+                    <div class="metric-name">early_warning_signal</div>
+                    <div class="metric-desc">AI-generated alerts for market disruptions like demand collapse, supply shocks, or price spikes that require immediate action.</div>
+                    <div class="metric-value">Alert: Omena Supply Shock</div>
+                    <div class="metric-source">Source: Multi-agent AI system with anomaly detection</div>
+                    <div><span class="use-case-badge">Risk Management</span> <span class="use-case-badge">Market Monitoring</span></div>
+                </div>
+            </div>
+            
+            <div class="content" style="margin-top: 30px; background: rgba(59, 130, 246, 0.05); padding: 15px; border-radius: 10px;">
+                <p><strong>Training Integration:</strong> When cold_chain_score drops below 70, the Learning Agent automatically recommends "Cold Chain Management" training, improving compliance by an average of 40%.</p>
+            </div>
+            
+            <div class="slide-number">13 / 16</div>
+        </div>
+    </div>
+    
+    <!-- Slide 14: Implementation & Use Cases -->
+    <div class="slide-container" id="slide14">
+        <div class="slide">
+            <div class="slide-header">
+                <div class="logo-container">
+                    <div class="logo">B</div>
+                    <div class="logo-text">Implementation & Impact</div>
+                </div>
+            </div>
+            
+            <h1 class="slide-title">7. Implementation Roadmap & Impact</h1>
+            <h2 class="slide-subtitle">Phased Rollout for Maximum Impact</h2>
+            
+            <div class="grid-2col" style="margin-top: 40px;">
+                <div>
+                    <h3 style="color: #1E3A8A; margin-bottom: 20px; font-size: 26px; border-bottom: 2px solid #FFD700; padding-bottom: 8px;">Phase 1: Foundation (Months 1-3)</h3>
+                    
+                    <div class="card" style="margin-bottom: 20px;">
+                        <div class="card-title"><i class="fas fa-database icon"></i> Core Implementation</div>
+                        <div class="card-content">
+                            <ul style="padding-left: 20px;">
+                                <li>Deploy 3 priority AI agents (Market, Pricing, Inventory)</li>
+                                <li>Integrate basic data pipelines</li>
+                                <li>Pilot with 100 women/youth traders</li>
+                                <li>Launch personalized dashboard v1.0</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="card-title"><i class="fas fa-graduation-cap icon"></i> Initial Training Integration</div>
+                        <div class="card-content">
+                            <ul style="padding-left: 20px;">
+                                <li>Basic Learning Agent deployment</li>
+                                <li>5 core training modules</li>
+                                <li>Automated skill gap detection</li>
+                                <li>Success measurement: 30% compliance improvement</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <div>
+                    <h3 style="color: #1E3A8A; margin-bottom: 20px; font-size: 26px; border-bottom: 2px solid #1E3A8A; padding-bottom: 8px;">Phase 2: Expansion (Months 4-6)</h3>
+                    
+                    <div class="card" style="margin-bottom: 20px;">
+                        <div class="card-title"><i class="fas fa-expand icon"></i> Scale & Advanced Features</div>
+                        <div class="card-content">
+                            <ul style="padding-left: 20px;">
+                                <li>Deploy all 7 AI agents</li>
+                                <li>Integrate with PropaData for MEL</li>
+                                <li>Expand to 3+ countries</li>
+                                <li>Add cross-border intelligence</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="card-title"><i class="fas fa-chart-pie icon"></i> Ecosystem Integration</div>
+                        <div class="card-content">
+                            <ul style="padding-left: 20px;">
+                                <li>Full TMA analytics dashboard</li>
+                                <li>Advanced training recommendations</li>
+                                <li>Gender-disaggregated impact reporting</li>
+                                <li>Regional trade optimization</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="content" style="margin-top: 40px;">
+                <h3 style="color: #1E3A8A; margin-bottom: 15px;">Expected Impact & ROI</h3>
+                <div class="grid-3col" style="margin-top: 20px;">
+                    <div class="card">
+                        <div class="card-title"><i class="fas fa-money-bill-wave icon"></i> Economic Impact</div>
+                        <div class="card-content">
+                            <ul style="padding-left: 20px;">
+                                <li>25% increase in trader profitability</li>
+                                <li>30% reduction in spoilage losses</li>
+                                <li>40% faster cross-border trade</li>
+                                <li>60% reduction in SPS rejections</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="card-title"><i class="fas fa-users icon"></i> Social Impact</div>
+                        <div class="card-content">
+                            <ul style="padding-left: 20px;">
+                                <li>50% increase in women trader participation</li>
+                                <li>70% youth trader retention</li>
+                                <li>Personalized capacity building</li>
+                                <li>Reduced gender barriers</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="card-title"><i class="fas fa-chart-line icon"></i> Platform Impact</div>
+                        <div class="card-content">
+                            <ul style="padding-left: 20px;">
+                                <li>3x increase in platform engagement</li>
+                                <li>Real-time MEL reporting</li>
+                                <li>Scalable across 7 countries</li>
+                                <li>70% lower operational costs</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="slide-number">14 / 16</div>
+        </div>
+    </div>
+    
+    <!-- Slide 15: Demo -->
+    <div class="slide-container" id="slide15">
+        <div class="slide">
+            <div class="slide-header">
+                <div class="logo-container">
+                    <div class="logo">B</div>
+                    <div class="logo-text">Live Demo</div>
+                </div>
+            </div>
+            
+            <h1 class="slide-title">8. Let's Go to the Demo!</h1>
+            <h2 class="slide-subtitle">Real-Time AI Analytics in Action</h2>
+            
+            <div class="content">
+                <p>Now let's see how our AI systems transform raw transaction data into <span class="highlight">actionable intelligence</span> for iSOKO traders.</p>
+            </div>
+            
+            <div class="demo-container">
+                <h3 class="demo-title">Sample Transaction Data Feed</h3>
+                <p class="demo-subtitle">How AI processes real fisheries transaction data</p>
+                
+                <div class="demo-step">
+                    <div class="demo-step-number">1</div>
+                    <div class="demo-step-text">
+                        <strong>Raw Transaction Data Ingestion</strong>
+                        <p>AI systems ingest real-time transaction data with all variables shown below</p>
+                    </div>
+                </div>
+                
+                <div class="table-container">
+                    <table class="demo-data-table">
+                        <thead>
+                            <tr>
+                                <th>order_id</th>
+                                <th>trader_id</th>
+                                <th>landing_site</th>
+                                <th>destination</th>
+                                <th>fish_species</th>
+                                <th>quantity_kg</th>
+                                <th>unit_price</th>
+                                <th>total_value</th>
+                                <th>payment_success</th>
+                                <th>avg_temp</th>
+                                <th>spoilage_risk</th>
+                                <th>cold_chain</th>
+                                <th>distance_km</th>
+                                <th>route_score</th>
+                                <th>cross_border</th>
+                                <th>repeat_customer</th>
+                                <th>sps_risk</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td>1472</td>
+                                <td>Usenge</td>
+                                <td>Nairobi</td>
+                                <td>Catfish</td>
+                                <td>150.9</td>
+                                <td>287</td>
+                                <td>43,308</td>
+                                <td>❌ 0</td>
+                                <td>3.1°C</td>
+                                <td>0.16</td>
+                                <td>84</td>
+                                <td>254</td>
+                                <td>76</td>
+                                <td>❌ 0</td>
+                                <td>❌ 0</td>
+                                <td>22</td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td>1613</td>
+                                <td>Kisumu</td>
+                                <td>Nairobi</td>
+                                <td>Tilapia</td>
+                                <td>122.7</td>
+                                <td>395</td>
+                                <td>48,466</td>
+                                <td>✅ 1</td>
+                                <td>3.9°C</td>
+                                <td>0.30</td>
+                                <td>70</td>
+                                <td>65.4</td>
+                                <td>94</td>
+                                <td>❌ 0</td>
+                                <td>❌ 0</td>
+                                <td>10</td>
+                            </tr>
+                            <tr>
+                                <td>3</td>
+                                <td>1852</td>
+                                <td>Dunga</td>
+                                <td>Mwanza</td>
+                                <td>Dagaa</td>
+                                <td>37.4</td>
+                                <td>106</td>
+                                <td>3,964</td>
+                                <td>✅ 1</td>
+                                <td>2.1°C</td>
+                                <td>0.07</td>
+                                <td>93</td>
+                                <td>375.5</td>
+                                <td>61</td>
+                                <td>✅ 1</td>
+                                <td>❌ 0</td>
+                                <td>19</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div class="demo-step">
+                    <div class="demo-step-number">2</div>
+                    <div class="demo-step-text">
+                        <strong>AI Processing & Insight Generation</strong>
+                        <p>Multiple AI agents analyze the data in real-time to generate actionable insights</p>
+                    </div>
+                </div>
+                
+                <div class="demo-grid">
+                    <div class="demo-card">
+                        <div class="demo-card-header">Market Intelligence Agent</div>
+                        <div class="demo-card-value">Tilapia Demand: High</div>
+                        <div class="demo-card-desc">Species demand index: 1.0 (Maximum)</div>
+                        <div class="demo-card-desc">Seasonality index: 0.72 (Peak season)</div>
+                    </div>
+                    
+                    <div class="demo-card">
+                        <div class="demo-card-header">Smart Pricing Agent</div>
+                        <div class="demo-card-value">KES 395/kg ✅</div>
+                        <div class="demo-card-desc">Optimal price for Tilapia</div>
+                        <div class="demo-card-desc">Seller competitiveness: 0.86</div>
+                    </div>
+                    
+                    <div class="demo-card">
+                        <div class="demo-card-header">Spoilage Prevention Agent</div>
+                        <div class="demo-card-value">⚠️ Risk: 0.30</div>
+                        <div class="demo-card-desc">Order #2: High temperature (3.9°C)</div>
+                        <div class="demo-card-desc">Time out of cold: 2.6 hours</div>
+                    </div>
+                    
+                    <div class="demo-card">
+                        <div class="demo-card-header">Logistics Optimization Agent</div>
+                        <div class="demo-card-value">Route Score: 94 ✅</div>
+                        <div class="demo-card-desc">Kisumu→Nairobi: 65.4 km</div>
+                        <div class="demo-card-desc">Traffic index: 0.54 (Moderate)</div>
+                    </div>
+                    
+                    <div class="demo-card">
+                        <div class="demo-card-header">Fraud Detection Agent</div>
+                        <div class="demo-card-value">Order #1: Alert ⚠️</div>
+                        <div class="demo-card-desc">Payment failed (0)</div>
+                        <div class="demo-card-desc">Risk score: 22 (Medium)</div>
+                    </div>
+                    
+                    <div class="demo-card">
+                        <div class="demo-card-header">SPS Pre-Screening Agent</div>
+                        <div class="demo-card-value">Compliance: 88%</div>
+                        <div class="demo-card-desc">Order #3: Cross-border to Mwanza</div>
+                        <div class="demo-card-desc">Document errors: 0 ✅</div>
+                    </div>
+                    
+                    <div class="demo-card">
+                        <div class="demo-card-header">Business Intelligence</div>
+                        <div class="demo-card-value">Trader 1613: High Performer</div>
+                        <div class="demo-card-desc">Total value: KES 48,466</div>
+                        <div class="demo-card-desc">Rating: 3.2/5.0</div>
+                    </div>
+                    
+                    <div class="demo-card">
+                        <div class="demo-card-header">Cross-Border Analytics</div>
+                        <div class="demo-card-value">Order #3: Tanzania Bound</div>
+                        <div class="demo-card-desc">Dunga→Mwanza: 375.5 km</div>
+                        <div class="demo-card-desc">Search intent: 0.72 (High)</div>
+                    </div>
+                </div>
+                
+                <div class="demo-step">
+                    <div class="demo-step-number">3</div>
+                    <div class="demo-step-text">
+                        <strong>Personalized Trader Dashboard Output</strong>
+                        <p>AI synthesizes insights into actionable recommendations for each trader</p>
+                    </div>
+                </div>
+                
+                <div class="grid-3col" style="margin-top: 20px;">
+                    <div class="card">
+                        <div class="card-title"><i class="fas fa-user icon"></i> For Trader 1613 (Tilapia)</div>
+                        <div class="card-content">
+                            <div class="demo-success" style="margin: 10px 0; padding: 10px;">
+                                <strong>✅ Success:</strong> Order #2 completed successfully
+                            </div>
+                            <ul style="padding-left: 20px; font-size: 14px;">
+                                <li><strong>Price:</strong> KES 395/kg (optimal)</li>
+                                <li><strong>Demand:</strong> Tilapia at peak season (0.72)</li>
+                                <li><strong>Route:</strong> Excellent efficiency (94/100)</li>
+                                <li><strong>Warning:</strong> Monitor cold chain (risk: 0.30)</li>
+                            </ul>
+                            <div class="demo-alert" style="margin-top: 10px; padding: 10px; font-size: 13px;">
+                                <strong>Training Recommendation:</strong> "Cold Chain Management Basics" course recommended
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="card-title"><i class="fas fa-exclamation-triangle icon"></i> For Trader 1472 (Catfish)</div>
+                        <div class="card-content">
+                            <div class="demo-warning" style="margin: 10px 0; padding: 10px;">
+                                <strong>⚠️ Alert:</strong> Order #1 payment failed
+                            </div>
+                            <ul style="padding-left: 20px; font-size: 14px;">
+                                <li><strong>Risk:</strong> Fraud score: 22 (investigate)</li>
+                                <li><strong>Market:</strong> Catfish demand: 0.65 (moderate)</li>
+                                <li><strong>Logistics:</strong> Long distance: 254 km</li>
+                                <li><strong>Quality:</strong> Cold chain: 84/100 (good)</li>
+                            </ul>
+                            <div class="demo-alert" style="margin-top: 10px; padding: 10px; font-size: 13px;">
+                                <strong>Training:</strong> "Secure Transactions & Fraud Prevention" course suggested
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="card-title"><i class="fas fa-globe-africa icon"></i> For Trader 1852 (Dagaa)</div>
+                        <div class="card-content">
+                            <div class="demo-success" style="margin: 10px 0; padding: 10px;">
+                                <strong>✅ Success:</strong> Cross-border order to Tanzania
+                            </div>
+                            <ul style="padding-left: 20px; font-size: 14px;">
+                                <li><strong>Export:</strong> Dunga→Mwanza (375.5 km)</li>
+                                <li><strong>SPS:</strong> Compliance: 88% (good)</li>
+                                <li><strong>Quality:</strong> Spoilage risk: 0.07 (very low)</li>
+                                <li><strong>Demand:</strong> Dagaa: 0.92 (sun-dried)</li>
+                            </ul>
+                            <div class="demo-alert" style="margin-top: 10px; padding: 10px; font-size: 13px;">
+                                <strong>Training:</strong> "Advanced Cross-Brade: Expand to Tanzania" course recommended
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="demo-step">
+                    <div class="demo-step-number">4</div>
+                    <div class="demo-step-text">
+                        <strong>Platform-Level Insights</strong>
+                        <p>Aggregated analytics for TMA and ecosystem monitoring</p>
+                    </div>
+                </div>
+                
+                <div style="display: flex; flex-wrap: wrap; gap: 15px; margin-top: 15px; justify-content: center;">
+                    <div class="pill">Total Value: KES 95,738</div>
+                    <div class="pill pill-alt">Success Rate: 66.7%</div>
+                    <div class="pill pill-light">Avg Spoilage Risk: 0.18</div>
+                    <div class="pill">Cross-Border: 33.3%</div>
+                    <div class="pill pill-alt">Avg Route Score: 77</div>
+                    <div class="pill pill-light">Avg SPS Risk: 17</div>
+                </div>
+            </div>
+            
+            <div class="quote" style="margin-top: 30px;">
+                "From raw data to real intelligence: How BRISK Analytics transforms every transaction into actionable insights for iSOKO traders."
+            </div>
+            
+            <div class="slide-number">15 / 16</div>
+        </div>
+    </div>
+    
+    <!-- Slide 16: Conclusion -->
+    <div class="slide-container" id="slide16">
+        <div class="slide">
+            <div class="slide-header">
+                <div class="logo-container">
+                    <div class="logo">B</div>
+                    <div class="logo-text">Conclusion & Next Steps</div>
+                </div>
+            </div>
+            
+            <h1 class="slide-title">Ready to Transform iSOKO with AI-Driven Intelligence</h1>
+            
+            <div class="grid-2col" style="margin-top: 40px;">
+                <div>
+                    <h3 style="color: #1E3A8A; margin-bottom: 20px; font-size: 26px; border-bottom: 2px solid #FFD700; padding-bottom: 8px;">Key Benefits Delivered</h3>
+                    
+                    <div class="card" style="margin-bottom: 20px;">
+                        <div class="card-title"><i class="fas fa-rocket icon"></i> Immediate Value</div>
+                        <div class="card-content">
+                            <ul style="padding-left: 20px;">
+                                <li>Real-time market intelligence for traders</li>
+                                <li>Automated compliance monitoring</li>
+                                <li>Personalized business insights</li>
+                                <li>Proactive risk management</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="card-title"><i class="fas fa-graduation-cap icon"></i> Capacity Building</div>
+                        <div class="card-content">
+                            <ul style="padding-left: 20px;">
+                                <li>AI-detected skill gaps</li>
+                                <li>Personalized training recommendations</li>
+                                <li>Just-in-time learning modules</li>
+                                <li>Continuous improvement tracking</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <div>
+                    <h3 style="color: #1E3A8A; margin-bottom: 20px; font-size: 26px; border-bottom: 2px solid #1E3A8A; padding-bottom: 8px;">Strategic Advantages</h3>
+                    
+                    <div class="card" style="margin-bottom: 20px;">
+                        <div class="card-title"><i class="fas fa-chess-board icon"></i> For TMA & Partners</div>
+                        <div class="card-content">
+                            <ul style="padding-left: 20px;">
+                                <li>Real-time MEL reporting</li>
+                                <li>Gender-disaggregated analytics</li>
+                                <li>Trade corridor optimization</li>
+                                <li>Policy impact assessment</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="card-title"><i class="fas fa-expand-arrows-alt icon"></i> Scalability & Sustainability</div>
+                        <div class="card-content">
+                            <ul style="padding-left: 20px;">
+                                <li>Low-resource AI models</li>
+                                <li>7-country ready architecture</li>
+                                <li>70% lower operational costs</li>
+                                <li>Self-sustaining through trader success</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div style="text-align: center; margin-top: 50px; padding: 30px; background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(30, 58, 138, 0.1)); border-radius: 15px;">
+                <h2 style="color: #1E3A8A; margin-bottom: 20px;">Transforming Fisheries Commerce with Agentic AI</h2>
+                <p class="content" style="max-width: 800px; margin: 0 auto; font-size: 22px;">
+                    BRISK Analytics delivers comprehensive AI & Analytics capabilities that transform iSOKO from a transactional platform into an intelligent ecosystem—empowering women and youth traders, optimizing cross-border trade, and creating sustainable value across the fisheries sector.
+                </p>
+            </div>
+            
+            <div class="footer">
+                <p style="font-weight: 600; color: #1E3A8A;">BRISK Analytics | AI & Analytics Solution for iSOKO Fisheries E-Commerce Ecosystem</p>
+                <p style="color: #3B82F6;">Client Presentation | Tomorrow's Meeting</p>
+            </div>
+            
+            <div class="slide-number">16 / 16</div>
+        </div>
+    </div>
+    
+    <!-- Navigation Controls -->
+    <div class="nav-controls">
+        <button class="nav-btn" id="prevBtn"><i class="fas fa-chevron-left"></i></button>
+        <button class="nav-btn" id="nextBtn"><i class="fas fa-chevron-right"></i></button>
+    </div>
+    
+    <script>
+        let currentSlide = 1;
+        const totalSlides = 16;
+        
+        const progressBar = document.getElementById('progressBar');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        
+        function updateSlide() {
+            // Hide all slides
+            for (let i = 1; i <= totalSlides; i++) {
+                document.getElementById(`slide${i}`).classList.remove('active');
+            }
+            
+            // Show current slide
+            document.getElementById(`slide${currentSlide}`).classList.add('active');
+            
+            // Update progress bar
+            progressBar.style.width = `${(currentSlide / totalSlides) * 100}%`;
+            
+            // Update button states
+            prevBtn.disabled = currentSlide === 1;
+            nextBtn.disabled = currentSlide === totalSlides;
+        }
+        
+        function nextSlide() {
+            if (currentSlide < totalSlides) {
+                currentSlide++;
+                updateSlide();
+            }
+        }
+        
+        function prevSlide() {
+            if (currentSlide > 1) {
+                currentSlide--;
+                updateSlide();
+            }
+        }
+        
+        // Event listeners for buttons
+        prevBtn.addEventListener('click', prevSlide);
+        nextBtn.addEventListener('click', nextSlide);
+        
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.key === ' ') {
+                nextSlide();
+            } else if (e.key === 'ArrowLeft') {
+                prevSlide();
+            }
+        });
+        
+        // Initialize
+        updateSlide();
+        
+        // Add clickable slide navigation (optional)
+        document.addEventListener('click', (e) => {
+            if (e.target.closest('.slide') && !e.target.closest('.nav-btn') && !e.target.closest('button')) {
+                nextSlide();
+            }
+        });
+    </script>
+</body>
+</html>
